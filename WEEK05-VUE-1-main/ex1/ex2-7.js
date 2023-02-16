@@ -34,6 +34,7 @@ var app = new Vue({
             },
         ],
         counter: 0,
+        show: true
     },
 
     // *** SPOIL เนื้อหาสัปดาห์ถัด ๆ ไป***
