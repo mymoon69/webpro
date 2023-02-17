@@ -89,9 +89,9 @@
 
             <!-- ข้อ 3 ----------------------------------------------------------------- -->
             <div id='ex3'>
-                <a class="button is-danger" v-if="number_runner != 0 && number_runner % 2 != 0" >Odd Number</a>
-                <a class="button is-success" v-else-if="number_runner != 0 && number_runner % 2 == 0" >Even Number</a>
-                <a class="button is-info" v-else-if="number_runner == 0">Zero Number</a>
+                <a class="button is-danger" v-if="number_runner % 2 != 0" >Odd Number</a>
+                <a class="button is-success" v-else-if="number_runner % 2 == 0" >Even Number</a>
+                <a class="button is-info" v-if="number_runner == 0">Zero Number</a>
             </div>
 
             <hr>
