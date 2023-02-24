@@ -245,7 +245,7 @@
                     <div class="columns">
                         <div class="column">
                             <p class="control has-icons-left">
-                                <input class="input" type="text" placeholder="Name Search by Watchers">
+                                <input class="input" type="text" placeholder="Name Search by Watchers" v-model="searchName">
                                 <span class="icon is-small is-left">
                                     <i class="fa fa-search"></i>
                                 </span>
@@ -264,7 +264,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in dummyData" :key="index">
+                        <tr v-for="(item, index) in newData" :key="index">
                             <td>{{item.first_name}}</td>
                             <td>{{item.last_name}}</td>
                             <td>{{item.email}}</td>
@@ -284,7 +284,7 @@
                 <div style="display: flex; justify-content: flex-end;" class="my-2">
                     <div class="control has-icons-left">
                         <div class="select">
-                            <select>
+                            <select v-model="gender">
                                 <option></option>
                                 <option>Male</option>
                                 <option>Female</option>
@@ -310,7 +310,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in dummyData" :key="index">
+                        <tr v-for="(item, index) in genderSearch" :key="index">
                             <td>{{item.first_name}}</td>
                             <td>{{item.last_name}}</td>
                             <td>{{item.email}}</td>
@@ -333,11 +333,16 @@
                 message: 'Hello Vue!',
                 students: [],
                 logs: [],
+                //newData:[],
+                newData: dummyData,
+                genderData: dummyData,
                 prename: '',
                 fname: '',
                 lname: '',
                 score: '',
                 dummyData: dummyData,
+                searchName: '',
+                gender: ''
             },
             methods: {
                 addStudent() {
@@ -367,10 +372,12 @@
             },
             computed: {
                 sumScore() {
-                    var dataStudent = this.students
+                    //var dataStudent = this.students
                     var score = 0
-                    for (let index = 0; index < dataStudent.length; index++) {
-                        score += parseInt(dataStudent[index].score)
+                    //for (let index = 0; index < dataStudent.length; index++) {
+                    for (let index = 0; index < this.students.length; index++) {
+                        score += parseInt(this.students[index].score)
+                        //score += parseInt(dataStudent[index].score)
                     }
                     return score
                 },
@@ -381,6 +388,14 @@
                     else{
                         return this.sumScore/this.students.length
                     }
+                },
+                genderSearch() {
+                    return this.dummyData.filter(value => {
+                        return value.gender.includes(this.gender)
+                    })
+                    console.log(this.dummyData.filter(value => {
+                        value.gender.includes(this.searchGender)
+                    }))
                 }
             },
             watch: {
@@ -397,6 +412,24 @@
                         'average' : newvalue,
                         'from' : oldvalue,
                         'different' : newvalue-oldvalue
+                    })
+                },
+                searchName(newvalue){
+                    console.log(newvalue)
+                    //console.log(this.newData.filter(value => {return value.first_name.includes(newvalue)}))
+                    // return this.newData.filter(value => {
+                    //     return value.first_name.includes(newvalue) || value.last_name.includes(newvalue)
+                    // })
+                    // console.log(this.newData.filter(value => {
+                    //     return (value.first_name.includes(newvalue) || value.last_name.includes(newvalue))}))
+
+                    // console.log(this.newData.filter(value => {
+                    //     return value.first_name.includes(newvalue) || value.last_name.includes(newvalue) || fullName.includes(newvalue)
+                    // }))
+
+                    this.newData = this.dummyData.filter(value => {
+                        let fullName = value.first_name + ' ' + value.last_name
+                        return value.first_name.toLowerCase().includes(newvalue.toLowerCase()) || value.last_name.toLowerCase().includes(newvalue.toLowerCase()) || fullName.toLowerCase().includes(newvalue.toLowerCase())
                     })
                 }
             }
