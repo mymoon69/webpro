@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/css/all.css" rel="stylesheet" />
+    <link href="/css/bulma.css" rel="stylesheet" />
+    <script src="/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>My Blogs</title>
+  </head>
+  <body class="has-background-light">
+    <div class="container is-widescreen">
+      <section class="hero">
+        <div class="hero-body">
+          <p class="title">My Stories</p>
+        </div>
+      </section>
+      <section class="section" id="app">
+          <div class="content">
+            <div class="columns is-multiline">
+              
+                <div class="column is-3" v-for="blog in computed_blogs">
+                  <div class="card">
+                      <div class="card-image pt-5">
+                        <figure class="image">
+                          <img :src="blog.file_path" alt="Placeholder image">
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="title">{{blog.title}}</div>
+                        <div class="content">
+                          {{blog.content}}
+                        </div>
+                        
+                      </div>
+                      <footer class="card-footer">
+                        <a class="card-footer-item" :href="'/detail/' + blog.id">Read more...</a>
+                        <a class="card-footer-item">
+                          <span class="icon-text">
+                            <span class="icon">
+                              <i class="far fa-heart"></i>
+                            </span>
+                            <span>Like</span>
+                          </span>
+                        </a>
+                      </footer>
+                  </div>
+                </div>
+              
+            </div>
+      </section>
+  </div>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        blogs: JSON.parse(`<%- data %>`)
+      },
+      computed: {
+        computed_blogs(){
+          let results = this.blogs
+          return results.map((b) => {
+            if (b.content.length > 200){
+              b.content = b.content.substring(0, 200) + '...'
+            }
+            return b
+          })
+        }
+      }
+    })
+  </script>
+  </body>
+</html>
