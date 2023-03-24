@@ -9,11 +9,11 @@ router.get('/', function(req, res) {
     var search = req.query.search
     if(search == undefined){
         var data = { 
-            article: article } //เอาข้อมูลใน json ใส่ //not filter
+            article: article } //เอาข้อมูลใน json ใส่ //not filter //obj
             res.render('index', data)//render html index ชื่อไฟล์
     }else{
-        var data = { article: article.filter(value => {
-            return value.title.toLowerCase().includes(search.toLowerCase())
+        var data = { article: article.filter(value => { 
+            return value.title.toLowerCase().includes(String(search).toLowerCase())
         })}
         res.render('index', data)//render html index ชื่อไฟล์
     }

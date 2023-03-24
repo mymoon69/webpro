@@ -8,7 +8,7 @@ router.get('/:id', (req, res) => {
     if(req.params.id > 0 && req.params.id < 5){
         var data = article[req.params.id - 1]
     }
-    console.log(data)
+    console.log('data', {data}) //obj
     res.render('detail', {data})
 })
 
