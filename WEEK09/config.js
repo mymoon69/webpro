@@ -3,7 +3,7 @@ const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
   host: 'localhost', //ที่อยู่ของ database server
   user: 'root',
-  password: 'peeranut',
+  password: 'sasikan',
   database: 'webpro',
   // waitForConnections: true,
   // connectionLimit: 10,

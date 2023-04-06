@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax Example</title>
+  </head>
+  <body>
+    <div>
+      <h2>The XMLHttpRequest Object</h2>
+      <p id="demo1">...</p>
+      <button type="button" onclick="loadDoc()">Change Content</button>
+      <hr>
+      <h2>AJAX Request - Dad Joke</h2>
+      <p id="demo2">...</p>
+      <button type="button" onclick="loadJoke()">Load Joke</button>
+      <hr>
+      <h2>AJAX Request - Fetch API</h2>
+      <p id="demo3">...</p>
+      <button type="button" onclick="fetchJoke()">Load Joke using Fetch</button>
+    </div>
+
+    <script>
+      function loadDoc() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo1").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("GET", "ajax_info.txt", true);
+        xhttp.send();
+      }
+
+      // ฟังก์ชันเรียก API
+      function getAPI (url, success, error) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            const res = JSON.parse(this.response);
+            success(res);
+          } else if (this.readyState == 4) {
+            const res = JSON.parse(this.response);
+            error(res);
+          }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.setRequestHeader("Accept", "application/json");
+        xhttp.send();
+      }
+      
+      function loadJoke () {
+        getAPI('https://icanhazdadjoke.com/', (res) => {
+          // Success callback
+          document.getElementById("demo2").innerHTML = res.joke;
+        }, (err) => {
+          // Error callback
+        })
+      }
+
+      function fetchJoke () {
+        fetch('https://icanhazdadjoke.com/', {
+            headers: {'Accept': 'application/json'}
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            document.getElementById("demo3").innerHTML = data.joke;
+          })
+          .catch(err => console.log('Error', err))
+      }
+    </script>
+  </body>
+</html>

@@ -20,7 +20,8 @@
     </section>
     <section class="section" id="app">
       <div class="content">
-        <form method="GET" action="/">
+        <!-- ส่งค่า search ไปที่ path '/' เป็น method get -->
+        <form method="GET" action="/"> 
           <div class="columns">
             <div class="column is-4 is-offset-3">
               <input class="input" type="text" name="search" placeholder="ค้นชื่อบทความ" value="<%= search %>">
@@ -48,25 +49,24 @@
                   <div class="content">
                     <% if (blog.content.length> 200) { %>
                       <%= blog.content.substring(0, 197) + "..." %>
-                    <% } else { %>
-                      <%= blog.content %>
-                    <% } %>
+                        <% } else { %>
+                          <%= blog.content %>
+                            <% } %>
                   </div>
 
                 </div>
                 <footer class="card-footer">
-                  <a class="card-footer-item" href="<%= `/blogs/${blog.id}/` %>">Read more...</a>
+                  <a class="card-footer-item" href="<%= `/detail/${blog.id}/` %>">Read more...</a>
                   <a class="card-footer-item">
-                    
-                    <form method="POST" action="<%= `/blogs/addlike/${blog.id}` %>" id="form<%= blog.id %>"> 
-                      <span class="icon-text" onclick="document.getElementById('form<%= blog.id %>').submit();">
+                    <form method="POST" action="<%= `/blogs/addlike/${blog.id}` %>" id="form<%= blog.id %>"></form>
+                    <span class="icon-text" onclick="document.getElementById('form<%= blog.id %>').submit();">
+                      <span class="icon-text">
                         <span class="icon">
                           <i class="far fa-heart"></i>
                         </span>
                         <span>Like (<%= blog.like %>)</span> <!-- ปรับเพิ่มให่้แสดงจำนวน like ในวงเล็บ -->
                       </span>
-                    </form>
-
+                      </form>
                   </a>
                 </footer>
               </div>

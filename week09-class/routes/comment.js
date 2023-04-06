@@ -9,7 +9,6 @@ router.get('/:blogId/comments', function (req, res, next) {
 // Create new comment
 router.post('/:blogId/comments', async function (req, res, next) {
     try {
-        // const [rows, fields] = await pool.query("SELECT * FROM comments");
         const [rows1, fields1] = await pool.query("INSERT INTO comments (comment, comments.like, blog_id, comment_by_id) VALUES (?, ?, ?, ?)", [
             req.body.comment, req.body.like, req.params.blogId, req.body.comment_by_id
         ]); //return เป็น promise ต้องมีการรอผลเพราะมี await
@@ -26,7 +25,7 @@ router.post('/:blogId/comments', async function (req, res, next) {
 // Update comment
 router.put('/comments/:commentId', async function (req, res, next) {
     try {
-        const [rows, fields] = await pool.query("SELECT * FROM comments WHERE id=?", [req.params.commentId]);
+        // const [rows, fields] = await pool.query("SELECT * FROM comments WHERE id=?", [req.params.commentId]);
         const [rows1, fields1] = await pool.query("UPDATE comments SET comment = ?, comments.like = ?, comment_date = ?, comment_by_id = ?, blog_id = ? WHERE id=?", [
             req.body.comment, req.body.like, req.body.comment_date, req.body.comment_by_id, req.body.blog_id, req.params.commentId
         ]); //return เป็น promise ต้องมีการรอผลเพราะมี await
@@ -46,12 +45,14 @@ router.put('/comments/:commentId', async function (req, res, next) {
 // Delete comment
 router.delete('/comments/:commentId', async function (req, res, next) {
     try {
-        const [rows, fields] = await pool.query("SELECT * FROM comments WHERE id = ?", [req.params.commentId]);
+        const [rows, fields] = await pool.query("SELECT * FROM comments WHERE id = ?", [req.params.commentId]); //เก็บตัวที่จะลบ
         const [rows1, fields1] = await pool.query("DELETE FROM comments WHERE id = ?", [req.params.commentId]); //return เป็น promise ต้องมีการรอผลเพราะมี await
         //res กลับเป็น
         res.json(
             { message: `Comment ID ${req.params.commentId} is deleted.` }
         )
+        console.log(rows)
+        console.log(rows1)
     } catch (err) {
         return next(err);
     }
@@ -62,9 +63,8 @@ router.put('/comments/addlike/:commentId', async function (req, res, next) {
     try {
         const [rows, fields] = await pool.query("SELECT * FROM comments WHERE id=?", [req.params.commentId,]); //return เป็น promise ต้องมีการรอผลเพราะมี await
         let likeNum = rows[0].like //เก็บค่าเดิม
-        console.log('Like num =', likeNum) // console.log() จำนวน Like ออกมาดู
         //เพิ่มจำนวน like ไปอีก 1 ครั้ง
-        console.log(rows[0])
+        console.log(rows[0])//ข้อมูลเป็น arrayตัวที่ 0
         likeNum += 1
 
         //Update จำนวน Like กลับเข้าไปใน DB
