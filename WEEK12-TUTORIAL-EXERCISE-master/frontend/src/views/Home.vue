@@ -131,7 +131,7 @@ export default {
     },
     isBlogOwner(blog) {
       if (!this.user) return false;
-      return blog.create_by_id === this.user.id;
+      return blog.create_by_id === this.user.id || this.user.role === 'admin';
     },
   },
 };

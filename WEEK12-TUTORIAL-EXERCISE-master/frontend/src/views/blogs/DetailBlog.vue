@@ -270,11 +270,11 @@ export default {
     },
     isBlogOwner(blog) {
       if (!this.user) return false;
-      return blog.create_by_id === this.user.id;
+      return blog.create_by_id === this.user.id || this.user.role === 'admin';
     },
     isCommentOwner(comment) {
       if (!this.user) return false;
-      return comment.comment_by_id === this.user.id;
+      return comment.comment_by_id === this.user.id || this.user.role == 'admin';
     },
   },
 };

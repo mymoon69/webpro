@@ -41,7 +41,7 @@
             </a>
             <div class="navbar-dropdown">
               <a class="navbar-item">Profile</a>
-              <a class="navbar-item">Log out</a>
+              <a class="navbar-item" @click="logout">Log out</a>
             </div>
           </div>
 
@@ -87,6 +87,11 @@ export default {
         this.user = res.data;
       });
     },
+    logout() {
+      localStorage.clear()
+      window.location.reload()
+      
+    }
   },
 };
 </script>
