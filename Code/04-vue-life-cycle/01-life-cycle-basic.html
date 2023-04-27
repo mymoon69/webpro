@@ -1,0 +1,58 @@
+<head></head>
+
+<!-- template -->
+<div id="app">
+  <p>{{ message }}</p>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      message: "this is data"
+    },
+    computed: {
+      count () {
+        return this.message.length
+      }
+    },
+
+    beforeCreate () {
+      console.log('beforeCreate', {
+        message: this.message,
+        count: this.count,
+        el: this.$el,
+      })
+    },
+    
+    created () {
+      console.log('created', {
+        message: this.message,
+        count: this.count,
+        el: this.$el,
+      })
+    },
+
+    mounted () {
+      console.log('mounted', {
+        message: this.message,
+        count: this.count,
+        el: this.$el,
+      })
+    },
+
+    beforeDestroy () {
+      console.log('beforeDestroy')
+    },
+
+    destroyed () {
+      console.log('destroyed')
+    }
+  })
+
+  window.onbeforeunload = () => {
+    app.$destroy()
+  }
+</script>

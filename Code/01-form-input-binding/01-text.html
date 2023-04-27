@@ -1,0 +1,26 @@
+<head><title>Text</title></head>
+
+<!-- template -->
+<div id="app">
+  <h1>Text</h1>
+  <input type="text" v-model="message">
+  <p>Message: {{ message }}</p>
+  <hr>
+
+  <h1>Textarea</h1>
+  <textarea v-model="comment"></textarea>
+  <p>Comment: </p>
+  <p style="white-space: pre-line;">{{ comment }}</p>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!',
+      comment: ''
+    }
+  })
+</script>

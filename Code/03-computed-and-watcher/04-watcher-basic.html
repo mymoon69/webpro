@@ -1,0 +1,35 @@
+<head></head>
+
+<!-- template -->
+<div id="app">
+  <input type="text" v-model="firstName">
+  <input type="text" v-model="lastName">
+  <p>{{ fullName }}</p>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    firstName: 'Apple',
+    lastName: 'Banana',
+    fullName: 'Apple Banana'
+  },
+  watch: {
+    firstName: function (newFirstName, oldFirstName) {
+      console.log({new: newFirstName, old: oldFirstName})
+      this.fullName = newFirstName + ' ' + this.lastName
+    },
+    lastName: function (val) {
+      this.fullName = this.firstName + ' ' + val
+    }
+  },
+  // computed: {
+  //   fullName () {
+  //     return this.firstName + ' ' + this.lastName
+  //   }
+  // }
+})
+</script>

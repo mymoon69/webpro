@@ -1,0 +1,60 @@
+<head>
+  <title>Example 1</title>
+  <style>
+    img.example {width: 200px; height: 200px; object-fit: cover;}
+  </style>
+</head>
+
+<!-- template -->
+<div id="app">
+  <h1>Example 1. ให้ทำ Slide Show ด้วยรูปภาพต่อไปนี้</h1>
+  <img class="example" src="./assets/img1.jpg"/>
+  <img class="example" src="./assets/img2.jpg"/>
+  <img class="example" src="./assets/img3.jpg"/>
+  <img class="example" src="./assets/img4.jpg"/>
+  <hr>
+
+  <div style="text-align: center">
+    <img 
+      style="width: 400px; height: 400px; object-fit: cover;" 
+      :src="images[index]"
+    />
+    <br><br>
+    <button @click="backImage()">Back</button>
+    <button @click="nextImage()">Next</button>
+  </div>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      images: [
+        "./assets/img1.jpg",
+        "./assets/img2.jpg",
+        "./assets/img3.jpg",
+        "./assets/img4.jpg"
+      ],
+      index: 0
+    },
+    created () {
+      setInterval(this.nextImage, 5000)
+    },
+    methods: {
+      nextImage () {
+        this.index += 1
+        if (this.index > this.images.length - 1) {
+          this.index = 0
+        }
+      },
+      backImage () {
+        this.index -= 1
+        if (this.index < 0) {
+          this.index = this.images.length - 1
+        }
+      }
+    }
+  })
+</script>

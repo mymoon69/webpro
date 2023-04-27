@@ -1,0 +1,20 @@
+<head></head>
+
+<!-- template -->
+<div id="app">
+  <input type="radio" value="M" v-model="gender">ชาย<br>
+  <input type="radio" value="F" v-model="gender">หญิง<br>
+  <input type="radio" value="Unknow" v-model="gender">ไม่ระบุ<br>
+  <span>gender: {{ gender }}</span>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      gender: '',
+    }
+  })
+</script>

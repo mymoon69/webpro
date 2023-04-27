@@ -1,0 +1,32 @@
+<head><title>Text</title></head>
+
+<!-- template -->
+<div id="app">
+  <h1>Date</h1>
+  <input type="date" v-model="select_date">
+  <p>select_date: {{ select_date }}</p>
+  <hr>
+
+  <h1>Time</h1>
+  <input type="time" v-model="select_time">
+  <p>select_time: {{ select_time }}</p>
+  <hr>
+
+  <h1>Color</h1>
+  <input type="color" v-model="select_color">
+  <p :style="{'color': select_color}">select_color: {{ select_color }}</p>
+  <hr>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      select_date: '',
+      select_time: '',
+      select_color: '#000000'
+    }
+  })
+</script>

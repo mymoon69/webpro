@@ -1,0 +1,28 @@
+<head><title>Checkbox</title></head>
+
+<!-- template -->
+<div id="app">
+  <h1>Checkbox with boolean</h1>
+  <input type="checkbox" v-model="agree"> Are you OK?
+  <p>OK: {{ agree }}</p>
+  <hr>
+
+  <h1>Checkbox with array</h1>
+  <p>Share with</p>
+  <input type="checkbox" v-model="shareWith" value="Jack">Jack<br>
+  <input type="checkbox" v-model="shareWith" value="John">John<br>
+  <input type="checkbox" v-model="shareWith" value="Mike">Mike<br>
+  <p>ShareWith: {{ shareWith }}</p>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      agree: false,
+      shareWith: []
+    }
+  })
+</script>

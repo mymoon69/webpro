@@ -1,0 +1,32 @@
+<head><title>Prevent Default</title></head>
+
+<!-- template -->
+<div id="app">
+  <h1>Left Click, Right Click</h1>
+  <button
+    @click="onClickLeft"
+    @click.right.prevent="onClickRight"
+  >Click me</button>
+  <p>left: {{ clickLeft }}, right: {{ clickRight }}</p>
+  <hr> 
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      clickLeft: 0,
+      clickRight: 0
+    },
+    methods: {
+      onClickLeft() {
+        this.clickLeft++
+      },
+      onClickRight() {
+        this.clickRight++
+      }
+    }
+  })
+</script>

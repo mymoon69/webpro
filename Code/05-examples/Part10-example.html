@@ -1,0 +1,172 @@
+<head>
+  <title>Example 2</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+  />
+</head>
+
+<!-- template -->
+<div id="app">
+  <section class="section">
+    <div class="content">
+      <h1 class="is-size-1">Signup</h1>
+      <p>ให้สร้าง Signup Form โดยมี</p>
+      <ul>
+        <li>Username - ต้องกรอก</li>
+        <li>
+          Password - ต้องกรอก, ห้ามน้อยกว่า 8 ตัวอักษรและห้ามเป็นตัวเลขทั้งหมด
+        </li>
+        <li>Confirm Password - ต้องกรอก, ต้องเหมือนกันกับ Password</li>
+        <li>Birthdate - ต้องกรอก, ห้ามเป็นวันในอนาคต</li>
+      </ul>
+      <p>เมื่อกดปุ่ม Signup ให้ทำดังนี้</p>
+      <ul>
+        <li>ถ้าข้อมูลใน form ผ่าน validation ให้ alert('OK')</li>
+        <li>ถ้าข้อมูลใน form ไม่ผ่าน validation ให้ alert('กรุณาแก้ไข')</li>
+      </ul>
+    </div>
+    <hr />
+
+    <div class="columns is-desktop is-centered">
+      <div class="column is-4">
+        <form @submit.prevent="submit">
+          <p>Username</p>
+          <input
+            type="text"
+            class="input"
+            :class="{'is-danger': error.username}"
+            v-model="username"
+            @input="validateUsername()"
+          />
+          <span class="has-text-danger">{{ error.username }}</span>
+
+          <p class="pt-3">Password</p>
+          <input
+            type="password"
+            class="input"
+            :class="{'is-danger': error.password}"
+            v-model="password"
+            @input="validatePassword()"
+          />
+          <span class="has-text-danger">{{ error.password }}</span>
+
+          <p class="pt-3">Confirm Password</p>
+          <input
+            type="password"
+            class="input"
+            :class="{'is-danger': error.password2}"
+            v-model="password2"
+            @input="validatePassword2()"
+          />
+          <span class="has-text-danger">{{ error.password2 }}</span>
+
+          <p class="pt-3">Birthdate</p>
+          <input
+            type="date"
+            class="input"
+            :class="{'is-danger': error.birthdate}"
+            v-model="birthdate"
+            @change="validateBirthdate()"
+          />
+          <span class="has-text-danger">{{ error.birthdate }}</span>
+
+          <button class="button is-primary mt-3 is-fullwidth">Signup</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      username: '',
+      password: '',
+      password2: '',
+      birthdate: '',
+      error: {
+        username: '',
+        password: '',
+        password2: '',
+        birthdate: '',
+      },
+    },
+    methods: {
+      validateUsername() {
+        if (this.username === '') {
+          this.error.username = 'กรุณากรอกชื่อผู้ใช้'
+          return
+        }
+        this.error.username = ''
+      },
+
+      validatePassword() {
+        if (this.password === '') {
+          this.error.password = 'กรุณากรอกรหัสผ่าน'
+          return
+        }
+
+        if (this.password.length < 8) {
+          this.error.password = 'รหัสผ่านห้ามน้อยกว่า 8 ตัวอักษร'
+          return
+        }
+
+        if (!isNaN(this.password)) {
+          this.error.password = 'ห้ามเป็นตัวเลขทั้งหมด'
+          return
+        }
+
+        this.error.password = ''
+      },
+
+      validatePassword2() {
+        if (this.password2 === '') {
+          this.error.password2 = 'กรุณากรอกยืนยันรหัสผ่าน'
+          return
+        }
+
+        if (this.password2 !== this.password) {
+          this.error.password2 = 'รหัสผ่านไม่ตรงกัน'
+          return
+        }
+
+        this.error.password2 = ''
+      },
+
+      validateBirthdate() {
+        if (this.birthdate === '') {
+          this.error.birthdate = 'กรุณาระบุวันเกิด'
+          return
+        }
+
+        const today = new Date()
+        const bd = new Date(this.birthdate)
+        console.log({ today, bd })
+        if (bd > today) {
+          this.error.birthdate = 'ห้ามเป็นวันในอนาคต'
+          return
+        }
+
+        this.error.birthdate = ''
+      },
+    
+      submit () {
+        this.validateUsername()
+        this.validatePassword()
+        this.validatePassword2()
+        this.validateBirthdate()
+
+        if (this.error.username !== '' || this.error.password !== '' || this.error.password2 !== '' || this.error.birthdate) {
+          alert ('กรุณาแก้ไข')
+          return
+        }
+        
+        alert('OK')
+      }
+    },
+  })
+</script>
