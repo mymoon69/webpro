@@ -64,8 +64,11 @@
           <p class="help is-danger" v-if="!$v.titleBlog.alpha">
             Title must be alphabet only
           </p>
-          <p class="help is-danger" v-if="!$v.titleBlog.between">
-            Title must be between 10 - 25 letters
+          <p class="help is-danger" v-if="!$v.titleBlog.minLength">
+            Title must be at least 10 letters
+          </p>
+          <p class="help is-danger" v-if="!$v.titleBlog.maxLength">
+            Title must be not more than 25 letters
           </p>
         </template>
       </div>
@@ -111,7 +114,8 @@
       <div class="control mb-3">
         <label class="radio">
           <input
-            v-model="statusBlog"
+            v-model="$v.statusBlog.$model"
+            :class="{ 'is-danger': $v.statusBlog.$error }"
             type="radio"
             name="answer"
             value="status_private"
@@ -120,7 +124,8 @@
         </label>
         <label class="radio">
           <input
-            v-model="statusBlog"
+            v-model="$v.statusBlog.$model"
+            :class="{ 'is-danger': $v.statusBlog.$error }"
             type="radio"
             name="answer"
             value="status_public"
@@ -145,16 +150,36 @@
           <div class="field">
             <label class="label">วันที่โพสต์</label>
             <div class="control">
-              <input class="input" type="date" v-model="start_date" />
+              <input
+                v-model="$v.start_date.$model"
+                :class="{ 'is-danger': $v.start_date.$error }"
+                class="input"
+                type="date"
+              />
             </div>
           </div>
+          <template v-if="$v.start_date.$error">
+            <p class="help is-danger" v-if="!$v.start_date.checkStartdate">
+              ใส่วันสิ้นสุดโพสต์
+            </p>
+          </template>
         </div>
         <div class="column">
           <div class="field">
             <label class="label">วันสิ้นสุดโพสต์</label>
             <div class="control">
-              <input class="input" type="date" v-model="end_date" />
+              <input
+                v-model="$v.end_date.$model"
+                :class="{ 'is-danger': $v.end_date.$error }"
+                class="input"
+                type="date"
+              />
             </div>
+            <template v-if="$v.end_date.$error">
+              <p class="help is-danger" v-if="!$v.end_date.checkEnddate">
+                ใส่วันที่โพสต์
+              </p>
+            </template>
           </div>
         </div>
       </div>
@@ -174,8 +199,40 @@
 </template>
 
 <script>
-import { required, url, minLength, between } from "vuelidate/lib/validators";
+import {
+  required,
+  url,
+  minLength,
+  maxLength,
+  alpha,
+} from "vuelidate/lib/validators";
 import axios from "axios";
+
+function checkEnddate(value) {
+  if (value && !this.start_date) {
+    return false;
+  }
+  if (!value && !this.start_date) {
+    return true;
+  }
+  if (!value && !this.start_date) {
+    return true;
+  }
+  return new Date(value) > new Date(this.start_date);
+}
+
+function checkStartdate(value) {
+  if (value && !this.end_date) {
+    return false;
+  }
+  if (!value && !this.end_date) {
+    return true;
+  }
+  if (!value && !this.end_date) {
+    return true;
+  }
+  return new Date(value) < new Date(this.end_date);
+}
 
 export default {
   data() {
@@ -196,7 +253,8 @@ export default {
     titleBlog: {
       required,
       alpha,
-      between: between(10 - 25),
+      minLength: minLength(10),
+      maxLength: maxLength(25),
     },
     contentBlog: {
       required,
@@ -204,6 +262,15 @@ export default {
     },
     reference: {
       url,
+    },
+    statusBlog: {
+      required
+    },
+    start_date: {
+      checkStartdate,
+    },
+    end_date: {
+      checkEnddate,
     },
   },
   methods: {

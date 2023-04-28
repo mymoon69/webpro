@@ -53,23 +53,18 @@ router.put("/blogs/addlike/:blogId", async function (req, res, next) {
   }
 });
 
-const end_dateValidator = (value, helpers) => { //custom validator
-  if (value.length < 8) {
-      throw new Joi.ValidationError('Password must contain at least 8 characters')
-  }
-  if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
-      throw new Joi.ValidationError('Password must be harder')
-  }
-  return value
-}
-
 const createSchema = Joi.object({
   title: Joi.string().required().pattern(/^[a-zA-Z]{10,25}$/),
   content: Joi.string().required().min(50),
-  status: Joi.string().valid('status_private','status_public'),
+  status: Joi.string().valid('status_private','status_public').required(),
   reference: Joi.string().uri(),
-  start_date: Joi.date(),
-  end_date: Joi.date().greater(Joi.ref('start_date'))
+  pinned: Joi.string().required(),
+  start_date: Joi.date().optional(),
+  eend_date: Joi.date().optional().when('start_date', {
+    is: Joi.date().required(),
+    then: Joi.date().min(Joi.ref('start_date')).required(),
+    otherwise: Joi.date().forbidden()
+  })
 }) //instan ของ obj joi
 
 //create
@@ -79,10 +74,13 @@ router.post(
   async function (req, res, next) {
 
     try {
+      console.log("kkk")
       await createSchema.validateAsync(req.body, { abortEarly: false })
       //abortEarly เป็น option ถ้าfalse คือเช็คทุกตัวก่อนแล้วถ้าเจอปัญหาค่อยรีเทิร์นกลับไป
     } catch (err) {
+      console.log(err)
       return res.status(400).json(err)
+
     }
 
     if (req.method == "POST") {
@@ -90,27 +88,41 @@ router.post(
       let pathArray = [];
 
       if (!file) {
+        console.log("file")
         return res.status(400).json({ message: "Please upload a file" });
       }
 
       const title = req.body.title;
       const content = req.body.content;
-      const status = req.body.status;
+      const pinned = req.body.pinned;
+      let status = req.body.status
       const reference = req.body.reference;
       const start_date = req.body.start_date;
       const end_date = req.body.end_date;
+
+      if (status == "status_public") {
+        status = 01
+      }else if (status == "status_private") {
+        status = 02
+      }
 
       const conn = await pool.getConnection();
       // Begin transaction
       await conn.beginTransaction();
 
+      
+
+      console.log(status)
+
       try {
+        console.log("asd")
         let results = await conn.query(
           "INSERT INTO blogs(title, content, status, pinned, `like`,create_date, reference, start_date, end_date) VALUES(?, ?, ?, ?, 0,CURRENT_TIMESTAMP, ?, ?, ?);",
-          [title, content, status, pinned, reference, start_date, end_date]
+          [title, content, status, '0', reference, start_date, end_date]
         );
+        console.log("116")
         const blogId = results[0].insertId;
-
+        console.log("117")
         req.files.forEach((file, index) => {
           let path = [blogId, file.path.substring(6), index == 0 ? 1 : 0];
           pathArray.push(path);
@@ -120,11 +132,13 @@ router.post(
           "INSERT INTO images(blog_id, file_path, main) VALUES ?;",
           [pathArray]
         );
-
+        console.log("127")
         await conn.commit();
         res.send("success!");
       } catch (err) {
+        console.log(err)
         await conn.rollback();
+        console.log("rollback")
         return res.status(400).json(err);
       } finally {
         console.log("finally");
