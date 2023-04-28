@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const pool = require("../config");
 const fs = require("fs");
+const Joi = require('joi');
 
 router = express.Router();
 
@@ -52,10 +53,26 @@ router.put("/blogs/addlike/:blogId", async function (req, res, next) {
   }
 });
 
+const createSchema = Joi.object({
+  title: Joi.string().required().pattern(/^[a-zA-Z]{10,25}$/),
+  content: Joi.string().required().min(50),
+  status: Joi.string(),
+  reference: Joi.string(),
+}) //instan ของ obj joi
+
+//create
 router.post(
   "/blogs",
   upload.array("myImage", 5),
   async function (req, res, next) {
+
+    try {
+      await createSchema.validateAsync(req.body, { abortEarly: false })
+      //abortEarly เป็น option ถ้าfalse คือเช็คทุกตัวก่อนแล้วถ้าเจอปัญหาค่อยรีเทิร์นกลับไป
+    } catch (err) {
+      return res.status(400).json(err)
+    }
+
     if (req.method == "POST") {
       const file = req.files;
       let pathArray = [];
