@@ -24,7 +24,11 @@
       />
 
       <div v-if="images" class="columns is-multiline">
-        <div v-for="(image, index) in images" :key="image.id" class="column is-one-quarter">
+        <div
+          v-for="(image, index) in images"
+          :key="image.id"
+          class="column is-one-quarter"
+        >
           <div class="card">
             <div class="card-image">
               <figure class="image is-4by3">
@@ -32,7 +36,11 @@
               </figure>
             </div>
             <footer class="card-footer">
-              <a @click="deleteSelectImage(index)" class="card-footer-item has-text-danger">Delete</a>
+              <a
+                @click="deleteSelectImage(index)"
+                class="card-footer-item has-text-danger"
+                >Delete</a
+              >
             </footer>
           </div>
         </div>
@@ -41,31 +49,82 @@
       <div class="field mt-5">
         <label class="label">Title</label>
         <div class="control">
-          <input v-model="titleBlog" class="input" type="text" placeholder="Text input" />
+          <input
+            v-model="$v.titleBlog.$model"
+            :class="{ 'is-danger': $v.titleBlog.$error }"
+            class="input"
+            type="text"
+            placeholder="Text input"
+          />
         </div>
+        <template v-if="$v.titleBlog.$error">
+          <p class="help is-danger" v-if="!$v.titleBlog.required">
+            This field is required
+          </p>
+          <p class="help is-danger" v-if="!$v.titleBlog.alpha">
+            Title must be alphabet only
+          </p>
+          <p class="help is-danger" v-if="!$v.titleBlog.between">
+            Title must be between 10 - 25 letters
+          </p>
+        </template>
       </div>
 
       <div class="field">
         <label class="label">Content</label>
         <div class="control">
-          <textarea v-model="contentBlog" class="textarea" placeholder="Textarea"></textarea>
+          <textarea
+            v-model="$v.contentBlog.$model"
+            :class="{ 'is-danger': $v.contentBlog.$error }"
+            class="textarea"
+            placeholder="Textarea"
+          ></textarea>
         </div>
+        <template v-if="$v.contentBlog.$error">
+          <p class="help is-danger" v-if="!$v.contentBlog.required">
+            This field is required
+          </p>
+          <p class="help is-danger" v-if="!$v.contentBlog.minLength">
+            Content must be at least 50 letters
+          </p>
+        </template>
       </div>
-      
+
       <div class="field">
         <label class="label">Reference</label>
         <div class="control">
-          <input class="input" type="url" v-model="reference" placeholder="e.g. https://www.google.com">
+          <input
+            v-model="$v.reference.$model"
+            :class="{ 'is-danger': $v.reference.$error }"
+            class="input"
+            type="url"
+            placeholder="e.g. https://www.google.com"
+          />
         </div>
+        <template v-if="$v.reference.$error">
+          <p class="help is-danger" v-if="!$v.reference.url">
+            Reference must be url only
+          </p>
+        </template>
       </div>
 
       <div class="control mb-3">
         <label class="radio">
-          <input v-model="statusBlog" type="radio" name="answer" value="status_private" />
+          <input
+            v-model="statusBlog"
+            type="radio"
+            name="answer"
+            value="status_private"
+          />
           Private
         </label>
         <label class="radio">
-          <input v-model="statusBlog" type="radio" name="answer" value="status_public" />
+          <input
+            v-model="statusBlog"
+            type="radio"
+            name="answer"
+            value="status_public"
+          />
           Public
         </label>
       </div>
@@ -79,14 +138,14 @@
         </div>
       </div>
 
-      <hr>
+      <hr />
 
       <div class="columns">
         <div class="column">
           <div class="field">
             <label class="label">วันที่โพสต์</label>
             <div class="control">
-              <input class="input" type="date" v-model="start_date">
+              <input class="input" type="date" v-model="start_date" />
             </div>
           </div>
         </div>
@@ -94,7 +153,7 @@
           <div class="field">
             <label class="label">วันสิ้นสุดโพสต์</label>
             <div class="control">
-              <input class="input" type="date" v-model="end_date">
+              <input class="input" type="date" v-model="end_date" />
             </div>
           </div>
         </div>
@@ -105,7 +164,9 @@
           <button @click="submitBlog" class="button is-link">Submit</button>
         </div>
         <div class="control">
-          <button @click="$router.go(-1)" class="button is-link is-light">Cancel</button>
+          <button @click="$router.go(-1)" class="button is-link is-light">
+            Cancel
+          </button>
         </div>
       </div>
     </section>
@@ -113,6 +174,7 @@
 </template>
 
 <script>
+import { required, url, minLength, between } from "vuelidate/lib/validators";
 import axios from "axios";
 
 export default {
@@ -127,8 +189,22 @@ export default {
       statusBlog: "status_public",
       reference: "",
       start_date: "",
-      end_date: ""
+      end_date: "",
     };
+  },
+  validations: {
+    titleBlog: {
+      required,
+      alpha,
+      between: between(10 - 25),
+    },
+    contentBlog: {
+      required,
+      minLength: minLength(50),
+    },
+    reference: {
+      url,
+    },
   },
   methods: {
     selectImages(event) {
@@ -172,7 +248,7 @@ export default {
 
       axios
         .post("http://localhost:3000/blogs", formData)
-        .then((res) => this.$router.push({name: 'home'}))
+        .then((res) => this.$router.push({ name: "home" }))
         .catch((e) => console.log(e.response.data));
     },
   },

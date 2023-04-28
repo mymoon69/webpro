@@ -27,15 +27,9 @@
             </span>
           </div>
           <template v-if="$v.username.$error">
-            <p class="help is-danger" v-if="!$v.username.required">
-              This field is required
-            </p>
-            <p class="help is-danger" v-if="!$v.username.minLength">
-              Username must be at least 5 letters
-            </p>
-            <p class="help is-danger" v-if="!$v.username.maxLength">
-              Username must be not more than 20 letters
-            </p>
+            <p class="help is-danger" v-if="!$v.username.required">This field is required</p>
+            <p class="help is-danger" v-if="!$v.username.minLength">Username must be at least 5 letters</p>
+            <p class="help is-danger" v-if="!$v.username.maxLength">Username must be not more than 20 letters</p>
           </template>
         </div>
 

@@ -53,11 +53,23 @@ router.put("/blogs/addlike/:blogId", async function (req, res, next) {
   }
 });
 
+const end_dateValidator = (value, helpers) => { //custom validator
+  if (value.length < 8) {
+      throw new Joi.ValidationError('Password must contain at least 8 characters')
+  }
+  if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
+      throw new Joi.ValidationError('Password must be harder')
+  }
+  return value
+}
+
 const createSchema = Joi.object({
   title: Joi.string().required().pattern(/^[a-zA-Z]{10,25}$/),
   content: Joi.string().required().min(50),
-  status: Joi.string(),
-  reference: Joi.string(),
+  status: Joi.string().valid('status_private','status_public'),
+  reference: Joi.string().uri(),
+  start_date: Joi.date(),
+  end_date: Joi.date().greater(Joi.ref('start_date'))
 }) //instan ของ obj joi
 
 //create
@@ -84,7 +96,9 @@ router.post(
       const title = req.body.title;
       const content = req.body.content;
       const status = req.body.status;
-      const pinned = req.body.pinned;
+      const reference = req.body.reference;
+      const start_date = req.body.start_date;
+      const end_date = req.body.end_date;
 
       const conn = await pool.getConnection();
       // Begin transaction
@@ -92,8 +106,8 @@ router.post(
 
       try {
         let results = await conn.query(
-          "INSERT INTO blogs(title, content, status, pinned, `like`,create_date) VALUES(?, ?, ?, ?, 0,CURRENT_TIMESTAMP);",
-          [title, content, status, pinned]
+          "INSERT INTO blogs(title, content, status, pinned, `like`,create_date, reference, start_date, end_date) VALUES(?, ?, ?, ?, 0,CURRENT_TIMESTAMP, ?, ?, ?);",
+          [title, content, status, pinned, reference, start_date, end_date]
         );
         const blogId = results[0].insertId;
 
