@@ -6,6 +6,7 @@ async function logger(req, res, next) {
     next()
 }
 
+//checkว่าเรา login รึยัง
 async function isLoggedIn(req, res, next) {
     let authorization = req.headers.authorization
 
@@ -30,6 +31,7 @@ async function isLoggedIn(req, res, next) {
         'SELECT id, username, first_name, last_name, email, picture, mobile, join_date, role ' + 
         'FROM users WHERE id = ?', [token.user_id]
     )
+    
     req.user = users[0]
 
     next()
